@@ -3,4 +3,5 @@ Disallow: /register.html
 Disallow: /login.html
 Allow: /
 
-Sitemap: https://твой-домен.ru/sitemap.xml
+Sitemap: https://github.com/ngddlc/gazovoy_site
+
