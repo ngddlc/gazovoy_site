@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Регистрация | ГазЭнерго</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-b from-blue-50 to-blue-100 flex flex-col min-h-screen">
+
+ <header class="bg-orange-50 text-black shadow-md">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+       <div class="flex items-center space-x-3">
+      <img src="gazicon.png" alt="Логотип" class="w-10 h-10">
+      <h1 class="text-2xl font-bold">ГазЭнерго</h1>
+    </div>
+      <nav class="space-x-6">
+        <a href="index.html" class="hover:text-sky-300">Главная</a>
+        <a href="about.html" class="hover:text-sky-300">О компании</a>
+        <a href="services.html" class="hover:text-sky-300">Услуги</a>
+        <a href="contacts.html" class="hover:text-sky-300">Контакты</a>
+        <a href="registr.html" class="hover:text-sky-300 font-semibold border-b-2 border-sky-400">Регистрация</a>
+        <a href="login.html" class="hover:text-sky-300">Авторизация</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-grow flex items-center justify-center px-4">
+    <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full">
+      <h2 class="text-2xl font-bold text-center text-blue-700 mb-6">Регистрация</h2>
+
+      <form id="register-form" class="space-y-4">
+        <input type="text" name="name" placeholder="Имя" required 
+               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+        
+        <input type="email" name="email" placeholder="Email" required 
+               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+
+        <input type="password" name="password" placeholder="Пароль" required 
+               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+
+        <button type="submit" 
+                class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+          Зарегистрироваться
+        </button>
+      </form>
+    </div>
+  </main>
+
+ <footer class="bg-orange-50 text-black py-6 text-center">
+    <p>&copy; 2025 ГазЭнерго. Все права защищены.</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDu4hWnUBXegk3G6MDfosfpjqHaVCVoQOI",
+      authDomain: "gazovi-bb6ec.firebaseapp.com",
+      projectId: "gazovi-bb6ec",
+      storageBucket: "gazovi-bb6ec.firebasestorage.app",
+      messagingSenderId: "127689966268",
+      appId: "1:127689966268:web:1f8a91c7b6ed8272f106b9",
+      measurementId: "G-9MED4VYDEX"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    document.getElementById("register-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = e.target.name.value;
+      const email = e.target.email.value;
+      const password = e.target.password.value;
+
+      try {
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCred.user;
+
+        await setDoc(doc(db, "users", user.uid), {
+          name,
+          email,
+          createdAt: serverTimestamp()
+        });
+
+        alert("Регистрация успешна!");
+        e.target.reset();
+      } catch (err) {
+        alert("Ошибка: " + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
